@@ -1,9 +1,12 @@
+
 //here only routing is done
 'use strict';
 const newRequest = require('./functions/newRequest');
 const updateRequest = require('./functions/updateRequest');
 const readRequest = require('./functions/readRequest');
 const readIndex = require('./functions/readIndex');
+const readAllRequest =require('./functions/readAllRequest');
+
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 var request = require('request');
@@ -26,17 +29,17 @@ module.exports = router => {
         api_secret: 'NNP88tw2YEBofSww9bPK7AV9Jc0'
 
     });
-
+    
     //newRequest -  routes user input to function newRequest. 
     router.post("/newRequest", (req, res) => {
         console.log("Routing User Input to newRequest Function.....!")
         
-        var random_no = "";
-        var possible = "0254548745486765468426879hgjguassaiooisjgdiooahvhghudrkhvdgi12041453205253200044525846abcdefghijklmnopqrstuvwxyz";
+        var requestid = "";
+        var possible = "012345678998745612301224555285625255846197976487454187454345645432546254624566055862467679762245942418541241840415815920454";
         for (var i = 0; i < 4; i++)
-            random_no += possible.charAt(Math.floor(Math.random() * possible.length));
+        requestid += possible.charAt(Math.floor(Math.random() * possible.length));
 
-        var requestid = crypto.createHash('sha256').update(random_no).digest('base64');
+        // var requestid = crypto.createHash('sha256').update(random_no).digest('base64');
         console.log("requestid"+requestid);
         var status = req.body.status;
         console.log("status"+status);
@@ -147,8 +150,41 @@ module.exports = router => {
             });
         }
     });
-
    
+    router.get('/readAllRequest',cors(),(req,res) =>{
+
+        var requestList = [];
+        if (1 == 1) {
+            var startkey = parseInt('0000');
+            console.log("lol----->",startkey);
+            var endkey = parseInt('9999');
+            console.log("lollolo------>",endkey);
+        readAllRequest.readAllRequest(startkey, endkey)
+        .then(function(result) {
+               
+              return res.json({
+                 "status": 200,
+                 "message":  result.query
+             });
+         })
+ 
+         .catch(err => res.status(err.status).json({
+             message: err.message
+         }));
+        }else {
+            res.status(401).json({
+                "status": false,
+                message: 'cant fetch data !'
+            });
+        }
+
+
+
+
+    })
+
+
+
     //------------------------------------ Functions ------------------------------------------ 
         
         function filterstatus(status) {
